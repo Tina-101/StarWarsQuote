@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars Quotes Generator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #quote-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        #quote {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        #character {
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+        #movie {
+            color: #555;
+        }
+        #new-quote-btn {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quote-container">
+        <div id="quote"></div>
+        <div id="character"></div>
+        <div id="movie"></div>
+        <button id="new-quote-btn" onclick="getRandomQuote()">Get New Quote</button>
+    </div>
+
+    <script>
+        async function getRandomQuote() {
+        const characterResponse = await fetch('https://swapi.dev/api/people/');
+        const characterData = await characterResponse.json();
+        const randomCharacter = characterData.results[Math.floor(Math.random() * characterData.results.length)];
+        
+        const characterName = randomCharacter.name;
+
+        const films = randomCharacter.films;
+        const randomFilmUrl = films[Math.floor(Math.random() * films.length)];
+
+        const filmResponse = await fetch(randomFilmUrl);
+        const filmData = await filmResponse.json();
+        const quote = filmData.opening_crawl;
+
+        const movieTitle = filmData.title;
+
+        document.getElementById('quote').textContent = `"${quote}"`;
+        document.getElementById('character').textContent = `- ${characterName}`;
+        document.getElementById('movie').textContent = `(${movieTitle})`;
+    }
+
+
+        getRandomQuote(); // Display initial quote on page load
+    </script>
+
+</body>
+</html>
